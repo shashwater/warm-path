@@ -1,0 +1,11 @@
+a,b,kind,date,two_way
+me,alex,meeting,2026-09-20,1
+me,alex,message,2026-10-01,1
+me,priya,email,2024-01-10,0
+alex,dana,coworker,2026-06-01,1
+alex,dana,meeting,2026-08-15,1
+priya,dana,call,2026-09-01,1
+dana,vp_sales,meeting,2026-09-10,1
+dana,vp_sales,call,2026-10-02,1
+priya,vp_sales,email,2023-05-01,1
+alex,cro,intro,2025-03-01,1
