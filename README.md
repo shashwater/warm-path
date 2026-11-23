@@ -1,34 +1,35 @@
 # warm-path
 
-Find the warmest intro path from you to a target person, given your interaction history.
+A small, local Python demo that ranks introduction paths using a relationship graph. Given a CSV of sample interactions, it scores connections by recency and reciprocity, finds a path to each target, and drafts an ask to the first connector.
 
-Cold outreach converts worse than a warm intro. This tool builds a relationship graph from
-interaction logs (meetings, calls, emails, coworker overlap), scores each tie by recency and
-reciprocity, and finds the path with the highest combined warmth. It then writes the ask you would
-send to the first connector.
+## Quick start
 
-## How it scores
+Python 3.9 or later. No external dependencies.
 
-- Each interaction adds weight by kind (meeting > call > email > message), halved every 365 days.
-- One-way interactions count 40% as much as two-way ones.
-- Tie strength = `1 - exp(-total weight)`, so more history helps with diminishing returns.
-- Path warmth = product of tie strengths, with a 15% penalty per extra intermediary.
-- Search is Dijkstra on `-log(strength)`, capped at 3 hops by default.
-
-## Use
-
-```
+```bash
 python3 -m warm_path examples/sample.csv --me me --to vp_sales cro --today 2026-10-14
 ```
 
-CSV columns: `a,b,kind,date,two_way`. No dependencies beyond Python 3.9+.
+The included CSV is synthetic example data, not a real contact history. The command prints ranked paths and suggested introduction asks. It does not connect to email or calendar, and does not send messages.
 
-## Test
+## How scoring works
 
-```
+- Interaction kinds have different weights. Older interactions lose half their weight every 365 days.
+- One-way interactions count 40% as much as two-way interactions.
+- Tie strength is `1 - exp(-total weight)`, with diminishing returns from more history.
+- Path warmth is the product of tie strengths, with a 15% penalty per additional intermediary.
+- The search uses negative log costs and allows up to 3 hops by default.
+
+These are simple demo heuristics, not measured probabilities of an introduction succeeding.
+
+## Tests
+
+Run the standard-library test suite from the repository root:
+
+```bash
 PYTHONPATH=. python3 tests/test_graph.py
 ```
 
-## Next
+## Limits and next steps
 
-Pull interactions straight from email and calendar, and rank targets by account fit.
+This prototype only reads a local CSV. It has no automatic identity resolution, account-fit model or live email/calendar imports. Treat real interaction histories as private data. The suggested asks are drafts for a person to review, not messages ready to send automatically.
